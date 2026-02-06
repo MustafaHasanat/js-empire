@@ -19,9 +19,6 @@ COPY packages/eslint-config/package.json packages/eslint-config/
 COPY packages/tailwind-config/package.json packages/tailwind-config/
 COPY packages/typescript-config/package.json packages/typescript-config/
 
-# Copy patches directory (required for pnpm patchedDependencies)
-COPY patches ./patches
-
 # Install all deps including dev dependencies (workspace-aware)
 RUN corepack enable pnpm && pnpm install --frozen-lockfile
 
