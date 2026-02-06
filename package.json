@@ -3,13 +3,26 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "start": "turbo run start",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json,js,mjs,css,scss,mdx}\"",
+    "check-types": "turbo run check-types",
+    "clean": "turbo run clean && rm -rf node_modules .turbo pnpm-lock.yaml && pnpm install",
+    "reset": "pnpm clean && pnpm build",
+    "prepare": "husky"
   },
   "dependencies": {
+    "@heroui/react": "^2.8.8",
+    "@heroui/theme": "^2.4.26",
+    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
+    "framer-motion": "^12.23.26",
+    "husky": "^9.1.7",
+    "lucide-react": "^0.561.0",
     "next": "16.1.6",
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
@@ -21,6 +34,15 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "tailwindcss": "^4",
+    "turbo": "^2.8.3",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }

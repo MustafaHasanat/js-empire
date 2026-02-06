@@ -1,0 +1,96 @@
+---
+name: code-conventions
+description: This rule is for Cursor to follow code conventions we have.
+---
+
+# Overview
+
+Whenever you write a code, follow these rules:
+
+## Conventions
+
+Follow all the codebase conventions like how functions and variables are written, where to place everything, ...etc. Follow the SOLID coding principles in all code.
+
+## Locales
+
+Visible texts in the pages must always be put in the locales (or the i18n) directory or package in the relative place in both Arabic and English languages. Then gets called using the hook ("useI18n" or "useLocale") to be placed in the code.
+
+## Routing
+
+Every route must be put in the routes enum file where the key is CAPS_CASE and the value is kebab-case. Dynamic routes (e.g. article details page) should be written like this "/articles/ARTICLE_ID" and replaced upon usage. Routing must always be done using the provided custom router (like "useCustomRouter") to handle the multilingual routes ("/ar/" or "/en/"), and that applies to the links with the href too. Whenever using a link, it must be the provided custom link (like "CustomLink" or "MultilingualLink") to handle the multilingual routes as well.
+
+## Imports & Exports
+
+Every module (or directory) should have an "index.ts" file that exports all the files and sub modules inside it using ('export \* from "./file-or-dir-name";'), where every file should export all its functions and variables to be exported. Never use relative imports but rather use the absolute ones for better readability and easier importation.
+
+## API Calling
+
+Never call any API outside a TanStack query function mutation function. All endpoints should be defined in the provided enum. The variables inside the endpoint (like fetching an article's details using its ID) should be done as "/articles/ARTICLE_ID" and replaced using the provided API handler using the "endpointReplacements". Every custom hook that returns a TanStack hook (query or mutation) should have its types defined correctly wrapped in the related CustomResponse (CustomResponse or PaginatedCustomResponse).
+
+## Utilities
+
+All types, constants, enums, hooks, utility functions, and configs should be defined in their relative packages or modules. Utility functions should always have a short description (function annotation or documentation) that summarizes what is does and what it needs.
+
+## Component Pages
+
+Every page should have the "use client" annotation (if it is a client page) and exports the component. Never define types or constants inside the component's body, rather define them in the relative directories and import them in the component. Long logic that uses function, variables, states, useMemo, and useEffect should be moved to a new helper hook and gets called in the component to make it readable and not complex and long.
+
+## Complexity
+
+Try to always find the easiest, simplest, and most efficient solution with the least amount of code rather than the most complex one.
+
+## File Size
+
+Every file should never be more than 300 lines of code. Whenever a code exceeds 250 to 300 lines, try to optimize it or split it into multiple files following the codebase conventions.
+
+## Single Responsibility
+
+Each function should only have one purpose and each component file should only exports one component.
+
+## Listings
+
+Whenever building a listings page comes from an API call (from TanStack query), always display an empty state text with a nice message to tell users that there is no data, and a display skeletons (from HeroUI) in that layout with an appropriate count to the layout. The list item should be a component defined in another file for readability.
+
+## Forms
+
+### Schemas
+
+Every form should define a Zod schema in the relative schemas directory or module or package with its type inferred by the `ReturnType`. The schema should be an arrow function that takes the `locales` object to show error messages in both languages. Always provide error messages to either the form fields or the schema directly.
+
+### Form Utilities
+
+Then provide this schema and its type to a `useForm`, then provide its `control` to the form components, and its `handleSubmit` with the `onSubmit` function to the `form` HTML tag. It should define an `onSubmit` function that takes a `data` as a prop with the type of the schema. Forms that has the edit functionality should call an API to get the previous values (or just pass them from the parent if it already has them), then have a `useEffect` that loops through those values and fill the form accordingly.
+
+### Form Handler
+
+It should define a custom hook that returns a TanStack mutation hook where its function calls the API endpoint and returns the response as is (CustomResponse or PaginatedCustomResponse). Then this custom hook called in the component's body and used by its `mutateAsync` inside the `onSubmit` function.
+
+### Form Body
+
+Never create form fields (inputs, checkboxes, selects, ...etc) on the form body, define them in the ui or forms package or module using the `Controller` or the `useController` from `react-hook-form`, then call them in the form by providing them with the required params. Whenever asked to build an input field that takes text with both languages, use the `MultilingualInput`.
+
+### Post-Submission
+
+After submitting a form, it should show a relative toast message for pass and fail (depending on what the response returns) using the `addToast` from HeroUI. Also refetch the current data if the form was related to a listing comes from an API using the `queryClient.invalidateQueries` that runs after 500ms.
+
+## Naming
+
+The exported component must have the same name as its file's name. Follow these rules for naming:
+
+- Files: kebab-case
+- Directories: kebab-case
+- Types & Interfaces: PascalCase
+- Constants: PascalCase
+- Hooks: useCamelCase
+- Pages and Layouts' Components: PascalCase
+- Enums:
+  - Enum name: PascalCase
+  - Enum key: UPPER_SNAKE_CASE
+
+## Pages
+
+Every page other than the main page should have a `BreadcrumbsComponent` that shows the current path with a router.
+
+## Parameters
+
+All parameters across the project should be implemented as one object that has the parameters in it so we can modify them easily in the future, like this: `({ param1, param2 = false }:{ param1: string, param2?: boolean })`. Never define them as multiple parameters like this: `(param1: string, param2?: boolean)`. That applies to functions, arrow functions, components, hooks, and anything takes parameters.
